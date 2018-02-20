@@ -29,18 +29,19 @@ int main()
 {
 	//Initalize winsock
 	WSADATA wsData;
-	WORD ver = MAKEWORD(2, 2);
-	int wsOk = WSAStartup(ver, &wsData);
+	const WORD ver = MAKEWORD(2, 2);
+	const int wsOk = WSAStartup(ver, &wsData);
 	if (wsOk != 0)
 	{
 		std::cerr << "Cannot Initalize WinSock!" << std::endl;
 		return -1;
 	}
 	//Create a socket
-	SOCKET listening = socket(AF_INET, SOCK_STREAM, 0); //SOCK_DGRAM
-	if(listening == INVALID_SOCKET)
+	const SOCKET listener = socket(AF_INET, SOCK_STREAM, 0); //SOCK_DGRAM
+	if(listener == INVALID_SOCKET)
 	{
 		std::cerr << "Cannot create Socket!" << std::endl;
+		WSACleanup();
 		return -1;
 	}
 	//Bind the ip and port address to a socket
@@ -49,18 +50,19 @@ int main()
 	hint.sin_port = htons(27763);//host to network short - htons
 	hint.sin_addr.S_un.S_addr = INADDR_ANY; //Could also use inet_pton
 
-	bind(listening, reinterpret_cast<sockaddr*>(&hint), sizeof(hint));
+	bind(listener, reinterpret_cast<sockaddr*>(&hint), sizeof(hint));
 
 	//winsock socket is listening
-	listen(listening, SOMAXCONN);
+	listen(listener, SOMAXCONN);
 
 	//wait for connection
 	sockaddr_in client;
 	int clientSize = sizeof(client);
-	SOCKET clientSocket = accept(listening, reinterpret_cast<sockaddr*>(&client), &clientSize);
+	const SOCKET clientSocket = accept(listener, reinterpret_cast<sockaddr*>(&client), &clientSize);
 	if(clientSocket == INVALID_SOCKET)
 	{
 		std::cerr << "Invalid Client socket!" << std::endl;
+		WSACleanup();
 		return -1;
 	}
 
@@ -81,15 +83,16 @@ int main()
 	}
 
 	//close listening
-	closesocket(listening);
+	closesocket(listener);
 
 	//whileloop: accept and echo message
-	char buf[2000];
+#define bufferSize 4096
+	char buf[bufferSize];
 	while(true)
 	{
-		ZeroMemory(buf, 2000);
+		ZeroMemory(buf, bufferSize);
 		//wait for client to send data
-		int byteReceived = recv(clientSocket, buf, 2000, 0);
+		const int byteReceived = recv(clientSocket, buf, bufferSize, 0);
 		if (byteReceived == SOCKET_ERROR)
 		{
 			std::cerr << "Error in recv()!" << std::endl;
