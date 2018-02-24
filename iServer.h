@@ -27,6 +27,7 @@ public:
 	};
 	virtual bool StartServer(const int& port) = 0;
 	virtual bool StopServer() = 0;
+	virtual std::string GetUsingIP(const bool outputInformation = false) const = 0;
 
 	virtual void ClientMethod(iClient*const& client, std::future<void> futureObject) = 0;
 protected:
