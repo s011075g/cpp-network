@@ -1,33 +1,10 @@
-/*#include <iostream>
-#include <thread>
+#include <iostream>
+#include "TpcServer.h"
 #include <string>
 
-void Thread(const std::string name)
-{
-	for (auto i = 1; i <= 10; i++)
-		std::cout << name << ": " << i << std::endl;
-}
-
 int main()
 {
-	std::thread thread(Thread, "Thread 1");
-	std::thread thread2(Thread, "Thread 2");
-	if (thread.joinable())
-		thread.join();
-	if (thread2.joinable())
-		thread2.join();
-	std::cin.get();
-	return 0;
-}*/
-
-#include <iostream>
-#include <WS2tcpip.h>
-
-#pragma comment (lib, "ws2_32.lib")
-
-int main()
-{
-	//Initalize winsock
+	/*//Initalize winsock
 	WSADATA wsData;
 	const WORD ver = MAKEWORD(2, 2);
 	const int wsOk = WSAStartup(ver, &wsData);
@@ -87,6 +64,8 @@ int main()
 
 	//whileloop: accept and echo message
 #define bufferSize 4096
+
+
 	char buf[bufferSize];
 	while(true)
 	{
@@ -113,5 +92,18 @@ int main()
 	closesocket(clientSocket);
 
 	//Cleanup winsock
-	WSACleanup();
+	WSACleanup();*/
+
+	TpcServer* server = new TpcServer();
+	if (!server->StartServer(43081))
+		return -1;
+	std::string input;
+	while(input.compare("stop") != 0)
+	{
+		std::cout << "> ";
+		std::getline(std::cin, input);
+	}
+	server->StopServer();
+	delete server;
+	return 1;
 }

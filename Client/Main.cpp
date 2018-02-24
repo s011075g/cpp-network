@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
 #include <WS2tcpip.h>
+#include "../Packets.h"
 #pragma comment(lib, "ws2_32.lib")
-
+//https://www.youtube.com/watch?v=dquxuXeZXgo
 int main()
 {
 	const std::string ipAddress = "127.0.0.1";
-	const int port = 27763;
+	const int port = 43081;
 
 	//Initalize WinSock
 	WSADATA wsData;
@@ -55,7 +56,11 @@ int main()
 		if (userInput.size() > 0) //Checking for input
 		{
 			//Send text
+			int size = userInput.size();
+			const int send1 = send(listener, (char*)&size, sizeof(int), 0);
 			const int sendResult = send(listener, userInput.c_str(), userInput.size() + 1, 0);
+			PacketType type = P_NONE;
+			const int send2 = send(listener,(char*)&type, sizeof(type),0);
 			if (sendResult != SOCKET_ERROR)
 			{
 				//wait for response
