@@ -17,7 +17,7 @@ public:
 	virtual ~iClient() { delete _clientThread;};
 	virtual void Start() = 0;
 	virtual void ReceiveData(void*& data, int& dataSize, PacketType& type) = 0;
-	virtual void SendData(const void* data, const int& dataSiz, const PacketType& type) = 0;
+	virtual void SendData(const void* data, const int& dataSize, const PacketType& type) = 0;
 	virtual void CloseClient() = 0;
 	virtual bool IsOpen() const { return _isOpen; } 
 };

@@ -13,14 +13,26 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{af67286b-646f-47ef-86fb-b747950c2b5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TpcServerConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Packets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="iServerConnection.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="TpcServerConnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

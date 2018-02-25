@@ -18,16 +18,17 @@ void TpcClient::Start()
 void TpcClient::ReceiveData(void*& data, int& dataSize, PacketType& type)
 {
 	recv(_clientSocket, reinterpret_cast<char*>(&dataSize), sizeof(int), 0);
-	data = malloc(dataSize);
+	char* buffer = new char[dataSize] {0};
+	data = buffer;
 	recv(_clientSocket, static_cast<char*>(data), dataSize, 0);
 	recv(_clientSocket, reinterpret_cast<char*>(&type), sizeof(type), 0);
 }
 
 void TpcClient::SendData(const void* data, const int& dataSize, const PacketType& type)
 {
-	send(_clientSocket, reinterpret_cast<const char*>(dataSize), sizeof(int), 0);
+	send(_clientSocket, reinterpret_cast<const char*>(&dataSize), sizeof(int), 0);
 	send(_clientSocket, static_cast<const char*>(data), dataSize, 0);
-	send(_clientSocket, reinterpret_cast<const char*>(type), sizeof(type), 0);
+	send(_clientSocket, reinterpret_cast<const char*>(&type), sizeof(type), 0);
 }
 
 void TpcClient::CloseClient()

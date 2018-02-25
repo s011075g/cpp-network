@@ -20,6 +20,8 @@ TpcServer::TpcServer()
 
 TpcServer::~TpcServer()
 {
+	if (_isServerRunning)
+		this->TpcServer::StopServer(); //calls the correct pure virtual function
 	WSACleanup();
 }
 
@@ -27,6 +29,8 @@ bool TpcServer::StartServer(const int& port)
 {
 	if (!_isInitalized)
 		return false;
+	if (_isServerRunning)
+		StopServer();
 	_port = port;
 
 	_listeningThread = new std::thread(&TpcServer::Start, this, _exitSignal.get_future());
@@ -98,10 +102,11 @@ void TpcServer::ClientMethod(iClient*const& client, std::future<void> futureObje
 		int dataSize(0);
 		PacketType type(P_NONE);
 		client->ReceiveData(data, dataSize, type);
+		std::cout << (char*)data << std::endl;
 		_clientListAccess.lock();
 		for(auto c : _clients)
 			if(c != client)
-				c->SendData(data, dataSize, type);
+				c->SendData(data, dataSize + 1, type);
 		_clientListAccess.unlock();
 		free(data);
 	}

@@ -6,7 +6,10 @@ int main()
 {
 	iServer* server = new TpcServer();
 	if (!server->StartServer(43081))
+	{
+		delete server;
 		return -1;
+	}
 	std::string input = "";
 	while(input.compare("stop") != 0)
 	{

@@ -24,9 +24,11 @@ public:
 			delete c;
 		}
 		_clients.clear();
+		if(!_isServerRunning && _listeningThread) delete _listeningThread;
 	};
 	virtual bool StartServer(const int& port) = 0;
 	virtual bool StopServer() = 0;
+	//Gets the host IPv4, output information allows for it to be outputted to the console along side the port the server is running on
 	virtual std::string GetUsingIP(const bool outputInformation = false) const = 0;
 
 	virtual void ClientMethod(iClient*const& client, std::future<void> futureObject) = 0;

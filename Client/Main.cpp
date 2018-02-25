@@ -2,11 +2,11 @@
 #include <string>
 #include <WS2tcpip.h>
 #include "../Packets.h"
+#include "TpcServerConnection.h"
 #pragma comment(lib, "ws2_32.lib")
-//https://www.youtube.com/watch?v=dquxuXeZXgo
 int main()
 {
-	const std::string ipAddress = "127.0.0.1";
+	/*const std::string ipAddress = "127.0.0.1";
 	const int port = 43081;
 
 	//Initalize WinSock
@@ -44,8 +44,8 @@ int main()
 		WSACleanup();
 		return -1;
 	}
-	//While loop
-#define bufferSize 4096
+	//While loop*/
+/*#define bufferSize 4096
 	char buf[bufferSize];
 	std::string userInput;
 	do
@@ -79,5 +79,30 @@ int main()
 
 	WSACleanup();
 
-	return 0;
+	return 0;*/
+	std::string ipAddress = "";
+	int port = 0;
+	std::cout << "Server IPv4 Address: ";
+	std::cin >> ipAddress;
+	std::cout << "Server Port: ";
+	std::cin >> port;
+	iServerConnection* connection = new TpcServerConnection();
+	if (!connection->Connect(ipAddress, port))
+	{
+		delete connection;
+		return -1;
+	}
+	std::string input = "";
+	while(input.compare("disconnect") != 0)
+	{
+		std::cout << "> ";
+		std::getline(std::cin, input);
+		if(input.compare("disconnect") != 0 && input.size() > 0)
+		{
+			connection->SendData((void*)input.c_str(), input.size(), P_NONE);
+		}
+	}
+	connection->Disconnect();
+	delete connection;
+	return 1;
 }
